@@ -1,0 +1,626 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D2B3F7E30840561004789C7 /* StarzApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2B3F7D30840561004789C7 /* StarzApp.swift */; };
+		1D2B3F8030840561004789C7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2B3F7F30840561004789C7 /* ContentView.swift */; };
+		1D2B3F8230840561004789C7 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2B3F8130840561004789C7 /* Item.swift */; };
+		1D2B3F8430840563004789C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D2B3F8330840563004789C7 /* Assets.xcassets */; };
+		1D2B3F8830840563004789C7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D2B3F8730840563004789C7 /* Preview Assets.xcassets */; };
+		1D2B3F9230840563004789C7 /* StarzTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2B3F9130840563004789C7 /* StarzTests.swift */; };
+		1D2B3F9C30840563004789C7 /* StarzUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2B3F9B30840563004789C7 /* StarzUITests.swift */; };
+		1D2B3F9E30840563004789C7 /* StarzUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2B3F9D30840563004789C7 /* StarzUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1D2B3F8E30840563004789C7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1D2B3F7230840561004789C7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D2B3F7930840561004789C7;
+			remoteInfo = Starz;
+		};
+		1D2B3F9830840563004789C7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1D2B3F7230840561004789C7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D2B3F7930840561004789C7;
+			remoteInfo = Starz;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1D2B3F7A30840561004789C7 /* Starz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Starz.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D2B3F7D30840561004789C7 /* StarzApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarzApp.swift; sourceTree = "<group>"; };
+		1D2B3F7F30840561004789C7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		1D2B3F8130840561004789C7 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		1D2B3F8330840563004789C7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1D2B3F8530840563004789C7 /* Starz.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Starz.entitlements; sourceTree = "<group>"; };
+		1D2B3F8730840563004789C7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1D2B3F8D30840563004789C7 /* StarzTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StarzTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D2B3F9130840563004789C7 /* StarzTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarzTests.swift; sourceTree = "<group>"; };
+		1D2B3F9730840563004789C7 /* StarzUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StarzUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D2B3F9B30840563004789C7 /* StarzUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarzUITests.swift; sourceTree = "<group>"; };
+		1D2B3F9D30840563004789C7 /* StarzUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarzUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D2B3F7730840561004789C7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1D2B3F8A30840563004789C7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1D2B3F9430840563004789C7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1D2B3F7130840561004789C7 = {
+			isa = PBXGroup;
+			children = (
+				1D2B3F7C30840561004789C7 /* Starz */,
+				1D2B3F9030840563004789C7 /* StarzTests */,
+				1D2B3F9A30840563004789C7 /* StarzUITests */,
+				1D2B3F7B30840561004789C7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1D2B3F7B30840561004789C7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D2B3F7A30840561004789C7 /* Starz.app */,
+				1D2B3F8D30840563004789C7 /* StarzTests.xctest */,
+				1D2B3F9730840563004789C7 /* StarzUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1D2B3F7C30840561004789C7 /* Starz */ = {
+			isa = PBXGroup;
+			children = (
+				1D2B3F7D30840561004789C7 /* StarzApp.swift */,
+				1D2B3F7F30840561004789C7 /* ContentView.swift */,
+				1D2B3F8130840561004789C7 /* Item.swift */,
+				1D2B3F8330840563004789C7 /* Assets.xcassets */,
+				1D2B3F8530840563004789C7 /* Starz.entitlements */,
+				1D2B3F8630840563004789C7 /* Preview Content */,
+			);
+			path = Starz;
+			sourceTree = "<group>";
+		};
+		1D2B3F8630840563004789C7 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				1D2B3F8730840563004789C7 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		1D2B3F9030840563004789C7 /* StarzTests */ = {
+			isa = PBXGroup;
+			children = (
+				1D2B3F9130840563004789C7 /* StarzTests.swift */,
+			);
+			path = StarzTests;
+			sourceTree = "<group>";
+		};
+		1D2B3F9A30840563004789C7 /* StarzUITests */ = {
+			isa = PBXGroup;
+			children = (
+				1D2B3F9B30840563004789C7 /* StarzUITests.swift */,
+				1D2B3F9D30840563004789C7 /* StarzUITestsLaunchTests.swift */,
+			);
+			path = StarzUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D2B3F7930840561004789C7 /* Starz */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D2B3FA130840563004789C7 /* Build configuration list for PBXNativeTarget "Starz" */;
+			buildPhases = (
+				1D2B3F7630840561004789C7 /* Sources */,
+				1D2B3F7730840561004789C7 /* Frameworks */,
+				1D2B3F7830840561004789C7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Starz;
+			productName = Starz;
+			productReference = 1D2B3F7A30840561004789C7 /* Starz.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1D2B3F8C30840563004789C7 /* StarzTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D2B3FA430840563004789C7 /* Build configuration list for PBXNativeTarget "StarzTests" */;
+			buildPhases = (
+				1D2B3F8930840563004789C7 /* Sources */,
+				1D2B3F8A30840563004789C7 /* Frameworks */,
+				1D2B3F8B30840563004789C7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1D2B3F8F30840563004789C7 /* PBXTargetDependency */,
+			);
+			name = StarzTests;
+			productName = StarzTests;
+			productReference = 1D2B3F8D30840563004789C7 /* StarzTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		1D2B3F9630840563004789C7 /* StarzUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D2B3FA730840563004789C7 /* Build configuration list for PBXNativeTarget "StarzUITests" */;
+			buildPhases = (
+				1D2B3F9330840563004789C7 /* Sources */,
+				1D2B3F9430840563004789C7 /* Frameworks */,
+				1D2B3F9530840563004789C7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1D2B3F9930840563004789C7 /* PBXTargetDependency */,
+			);
+			name = StarzUITests;
+			productName = StarzUITests;
+			productReference = 1D2B3F9730840563004789C7 /* StarzUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1D2B3F7230840561004789C7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					1D2B3F7930840561004789C7 = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
+					1D2B3F8C30840563004789C7 = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = 1D2B3F7930840561004789C7;
+					};
+					1D2B3F9630840563004789C7 = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = 1D2B3F7930840561004789C7;
+					};
+				};
+			};
+			buildConfigurationList = 1D2B3F7530840561004789C7 /* Build configuration list for PBXProject "Starz" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1D2B3F7130840561004789C7;
+			productRefGroup = 1D2B3F7B30840561004789C7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D2B3F7930840561004789C7 /* Starz */,
+				1D2B3F8C30840563004789C7 /* StarzTests */,
+				1D2B3F9630840563004789C7 /* StarzUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D2B3F7830840561004789C7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D2B3F8830840563004789C7 /* Preview Assets.xcassets in Resources */,
+				1D2B3F8430840563004789C7 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1D2B3F8B30840563004789C7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1D2B3F9530840563004789C7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D2B3F7630840561004789C7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D2B3F8030840561004789C7 /* ContentView.swift in Sources */,
+				1D2B3F8230840561004789C7 /* Item.swift in Sources */,
+				1D2B3F7E30840561004789C7 /* StarzApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1D2B3F8930840563004789C7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D2B3F9230840563004789C7 /* StarzTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1D2B3F9330840563004789C7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D2B3F9C30840563004789C7 /* StarzUITests.swift in Sources */,
+				1D2B3F9E30840563004789C7 /* StarzUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1D2B3F8F30840563004789C7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1D2B3F7930840561004789C7 /* Starz */;
+			targetProxy = 1D2B3F8E30840563004789C7 /* PBXContainerItemProxy */;
+		};
+		1D2B3F9930840563004789C7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1D2B3F7930840561004789C7 /* Starz */;
+			targetProxy = 1D2B3F9830840563004789C7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1D2B3F9F30840563004789C7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1D2B3FA030840563004789C7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		1D2B3FA230840563004789C7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Starz/Starz.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Starz/Preview Content\"";
+				DEVELOPMENT_TEAM = SHH2D3S5F7;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manhutava.Starz;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1D2B3FA330840563004789C7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Starz/Starz.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Starz/Preview Content\"";
+				DEVELOPMENT_TEAM = SHH2D3S5F7;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manhutava.Starz;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		1D2B3FA530840563004789C7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SHH2D3S5F7;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manhutava.StarzTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Starz.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Starz";
+			};
+			name = Debug;
+		};
+		1D2B3FA630840563004789C7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SHH2D3S5F7;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manhutava.StarzTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Starz.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Starz";
+			};
+			name = Release;
+		};
+		1D2B3FA830840563004789C7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SHH2D3S5F7;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manhutava.StarzUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Starz;
+			};
+			name = Debug;
+		};
+		1D2B3FA930840563004789C7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SHH2D3S5F7;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manhutava.StarzUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Starz;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D2B3F7530840561004789C7 /* Build configuration list for PBXProject "Starz" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D2B3F9F30840563004789C7 /* Debug */,
+				1D2B3FA030840563004789C7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1D2B3FA130840563004789C7 /* Build configuration list for PBXNativeTarget "Starz" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D2B3FA230840563004789C7 /* Debug */,
+				1D2B3FA330840563004789C7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1D2B3FA430840563004789C7 /* Build configuration list for PBXNativeTarget "StarzTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D2B3FA530840563004789C7 /* Debug */,
+				1D2B3FA630840563004789C7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1D2B3FA730840563004789C7 /* Build configuration list for PBXNativeTarget "StarzUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D2B3FA830840563004789C7 /* Debug */,
+				1D2B3FA930840563004789C7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1D2B3F7230840561004789C7 /* Project object */;
+}
