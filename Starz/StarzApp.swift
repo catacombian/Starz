@@ -13,6 +13,14 @@ import UserNotifications
 struct StarzApp: App {
     private static let notificationDelegate = NotificationDelegate()
 
+    /// SwiftData store kept in the App Group so the widget can read the same tasks.
+    let container: ModelContainer = {
+        let config = ModelConfiguration(
+            groupContainer: .identifier("group.com.manhutava.Starz")
+        )
+        return try! ModelContainer(for: PlannerTask.self, configurations: config)
+    }()
+
     init() {
         UNUserNotificationCenter.current().delegate = Self.notificationDelegate
     }
@@ -22,6 +30,6 @@ struct StarzApp: App {
             TodayView()
                 .preferredColorScheme(.dark)
         }
-        .modelContainer(for: PlannerTask.self)
+        .modelContainer(container)
     }
 }

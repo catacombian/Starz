@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,10 +15,15 @@
 		1D2B3F9230840563004789C7 /* StarzTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2B3F9130840563004789C7 /* StarzTests.swift */; };
 		1D2B3F9C30840563004789C7 /* StarzUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2B3F9B30840563004789C7 /* StarzUITests.swift */; };
 		1D2B3F9E30840563004789C7 /* StarzUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2B3F9D30840563004789C7 /* StarzUITestsLaunchTests.swift */; };
+		1D35FB123087E574009666DC /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D7062CF3087BEE0004B13E9 /* WidgetKit.framework */; };
+		1D35FB133087E574009666DC /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D7062D13087BEE0004B13E9 /* SwiftUI.framework */; };
+		1D35FB203087E576009666DC /* PlannerWidgetExtensionExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1D35FB113087E574009666DC /* PlannerWidgetExtensionExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1D35FB263087EA1F009666DC /* PlannerTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2B3F8130840561004789C7 /* PlannerTask.swift */; };
+		1D35FB293087EB00009666DC /* Reminders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F40F2850EC7CAC3BDB54C8 /* Reminders.swift */; };
+		4DBBB0B0D9FF85597C3D2907 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE15A06F5767E8606E53EC5C /* CalendarView.swift */; };
 		58EBD0C51F5D8FFDF2463CDD /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294B3B32DCAA96A4569F8C18 /* Theme.swift */; };
 		5A9199FC5A81EE20860295D8 /* TaskEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E4D2DA8CA52C002D83B75C /* TaskEditorSheet.swift */; };
 		6D527DFFD0245CAF4F9AACBE /* Reminders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F40F2850EC7CAC3BDB54C8 /* Reminders.swift */; };
-		4DBBB0B0D9FF85597C3D2907 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE15A06F5767E8606E53EC5C /* CalendarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +41,28 @@
 			remoteGlobalIDString = 1D2B3F7930840561004789C7;
 			remoteInfo = Starz;
 		};
+		1D35FB1E3087E576009666DC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1D2B3F7230840561004789C7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D35FB103087E574009666DC;
+			remoteInfo = PlannerWidgetExtensionExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1D7062E03087BEE2004B13E9 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1D35FB203087E576009666DC /* PlannerWidgetExtensionExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1D2B3F7A30840561004789C7 /* Starz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Starz.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,11 +77,29 @@
 		1D2B3F9730840563004789C7 /* StarzUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StarzUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D2B3F9B30840563004789C7 /* StarzUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarzUITests.swift; sourceTree = "<group>"; };
 		1D2B3F9D30840563004789C7 /* StarzUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarzUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		1D35FB113087E574009666DC /* PlannerWidgetExtensionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PlannerWidgetExtensionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D35FB253087E858009666DC /* PlannerWidgetExtensionExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PlannerWidgetExtensionExtension.entitlements; sourceTree = "<group>"; };
+		1D7062CF3087BEE0004B13E9 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		1D7062D13087BEE0004B13E9 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		23F40F2850EC7CAC3BDB54C8 /* Reminders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminders.swift; sourceTree = "<group>"; };
 		294B3B32DCAA96A4569F8C18 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		62E4D2DA8CA52C002D83B75C /* TaskEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorSheet.swift; sourceTree = "<group>"; };
-		23F40F2850EC7CAC3BDB54C8 /* Reminders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminders.swift; sourceTree = "<group>"; };
 		AE15A06F5767E8606E53EC5C /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1D35FB213087E576009666DC /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1D35FB103087E574009666DC /* PlannerWidgetExtensionExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		1D35FB143087E574009666DC /* PlannerWidgetExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (1D35FB213087E576009666DC /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = PlannerWidgetExtension; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1D2B3F7730840561004789C7 /* Frameworks */ = {
@@ -79,15 +123,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1D35FB0E3087E574009666DC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D35FB133087E574009666DC /* SwiftUI.framework in Frameworks */,
+				1D35FB123087E574009666DC /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		1D2B3F7130840561004789C7 = {
 			isa = PBXGroup;
 			children = (
+				1D35FB253087E858009666DC /* PlannerWidgetExtensionExtension.entitlements */,
 				1D2B3F7C30840561004789C7 /* Starz */,
 				1D2B3F9030840563004789C7 /* StarzTests */,
 				1D2B3F9A30840563004789C7 /* StarzUITests */,
+				1D35FB143087E574009666DC /* PlannerWidgetExtension */,
+				1D7062CE3087BEE0004B13E9 /* Frameworks */,
 				1D2B3F7B30840561004789C7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -98,6 +154,7 @@
 				1D2B3F7A30840561004789C7 /* Starz.app */,
 				1D2B3F8D30840563004789C7 /* StarzTests.xctest */,
 				1D2B3F9730840563004789C7 /* StarzUITests.xctest */,
+				1D35FB113087E574009666DC /* PlannerWidgetExtensionExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -144,6 +201,15 @@
 			path = StarzUITests;
 			sourceTree = "<group>";
 		};
+		1D7062CE3087BEE0004B13E9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1D7062CF3087BEE0004B13E9 /* WidgetKit.framework */,
+				1D7062D13087BEE0004B13E9 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -154,10 +220,12 @@
 				1D2B3F7630840561004789C7 /* Sources */,
 				1D2B3F7730840561004789C7 /* Frameworks */,
 				1D2B3F7830840561004789C7 /* Resources */,
+				1D7062E03087BEE2004B13E9 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1D35FB1F3087E576009666DC /* PBXTargetDependency */,
 			);
 			name = Starz;
 			productName = Starz;
@@ -200,6 +268,28 @@
 			productReference = 1D2B3F9730840563004789C7 /* StarzUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		1D35FB103087E574009666DC /* PlannerWidgetExtensionExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D35FB223087E576009666DC /* Build configuration list for PBXNativeTarget "PlannerWidgetExtensionExtension" */;
+			buildPhases = (
+				1D35FB0D3087E574009666DC /* Sources */,
+				1D35FB0E3087E574009666DC /* Frameworks */,
+				1D35FB0F3087E574009666DC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1D35FB143087E574009666DC /* PlannerWidgetExtension */,
+			);
+			name = PlannerWidgetExtensionExtension;
+			packageProductDependencies = (
+			);
+			productName = PlannerWidgetExtensionExtension;
+			productReference = 1D35FB113087E574009666DC /* PlannerWidgetExtensionExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -207,7 +297,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 2710;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					1D2B3F7930840561004789C7 = {
@@ -220,6 +310,9 @@
 					1D2B3F9630840563004789C7 = {
 						CreatedOnToolsVersion = 15.0.1;
 						TestTargetID = 1D2B3F7930840561004789C7;
+					};
+					1D35FB103087E574009666DC = {
+						CreatedOnToolsVersion = 27.1;
 					};
 				};
 			};
@@ -239,6 +332,7 @@
 				1D2B3F7930840561004789C7 /* Starz */,
 				1D2B3F8C30840563004789C7 /* StarzTests */,
 				1D2B3F9630840563004789C7 /* StarzUITests */,
+				1D35FB103087E574009666DC /* PlannerWidgetExtensionExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -261,6 +355,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1D2B3F9530840563004789C7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1D35FB0F3087E574009666DC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -301,6 +402,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1D35FB0D3087E574009666DC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D35FB263087EA1F009666DC /* PlannerTask.swift in Sources */,
+				1D35FB293087EB00009666DC /* Reminders.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -313,6 +423,11 @@
 			isa = PBXTargetDependency;
 			target = 1D2B3F7930840561004789C7 /* Starz */;
 			targetProxy = 1D2B3F9830840563004789C7 /* PBXContainerItemProxy */;
+		};
+		1D35FB1F3087E576009666DC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1D35FB103087E574009666DC /* PlannerWidgetExtensionExtension */;
+			targetProxy = 1D35FB1E3087E576009666DC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -461,6 +576,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.manhutava.Starz;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -499,6 +615,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.manhutava.Starz;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -510,7 +627,6 @@
 		1D2B3FA530840563004789C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -533,7 +649,6 @@
 		1D2B3FA630840563004789C7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -556,7 +671,6 @@
 		1D2B3FA830840563004789C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SHH2D3S5F7;
@@ -578,7 +692,6 @@
 		1D2B3FA930840563004789C7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SHH2D3S5F7;
@@ -594,6 +707,75 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				TEST_TARGET_NAME = Starz;
+			};
+			name = Release;
+		};
+		1D35FB233087E576009666DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = PlannerWidgetExtensionExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SHH2D3S5F7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PlannerWidgetExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PlannerWidgetExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manhutava.Starz.PlannerWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1D35FB243087E576009666DC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = PlannerWidgetExtensionExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SHH2D3S5F7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PlannerWidgetExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PlannerWidgetExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manhutava.Starz.PlannerWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -632,6 +814,15 @@
 			buildConfigurations = (
 				1D2B3FA830840563004789C7 /* Debug */,
 				1D2B3FA930840563004789C7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1D35FB223087E576009666DC /* Build configuration list for PBXNativeTarget "PlannerWidgetExtensionExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D35FB233087E576009666DC /* Debug */,
+				1D35FB243087E576009666DC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
