@@ -7,26 +7,21 @@
 
 import SwiftUI
 import SwiftData
+import UserNotifications
 
 @main
 struct StarzApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+    private static let notificationDelegate = NotificationDelegate()
 
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    init() {
+        UNUserNotificationCenter.current().delegate = Self.notificationDelegate
+    }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TodayView()
+                .preferredColorScheme(.dark)
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(for: PlannerTask.self)
     }
 }

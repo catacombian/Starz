@@ -6,30 +6,44 @@
 //
 
 import XCTest
+@testable import Starz
 
 final class StarzTests: XCTestCase {
+    private let calendar = Calendar.current
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    private func date(_ hour: Int, _ minute: Int, dayOffset: Int = 0) -> Date {
+        let day = calendar.date(byAdding: .day, value: dayOffset, to: calendar.startOfDay(for: .now))!
+        return calendar.date(bySettingHour: hour, minute: minute, second: 0, of: day)!
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    func testBothRemindersWhenTaskIsFarAway() {
+        let now = date(10, 0)
+        let fireDates = Reminders.fireDates(for: date(14, 0), now: now)
+        XCTAssertEqual(fireDates, [date(13, 0), date(13, 50)])
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func testPastRemindersAreSkipped() {
+        let now = date(13, 30)
+        XCTAssertEqual(Reminders.fireDates(for: date(14, 0), now: now), [date(13, 50)])
+        XCTAssertEqual(Reminders.fireDates(for: date(14, 0), now: date(13, 55)), [])
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        measure {
-            // Put the code you want to measure the time of here.
-        }
+    func testOnDayKeepsTimeAndMovesDay() {
+        let time = date(18, 30)
+        let tomorrow = calendar.date(byAdding: .day, value: 1, to: .now)!
+        XCTAssertEqual(time.onDay(tomorrow), date(18, 30, dayOffset: 1))
     }
 
+    func testDayRangeCoversWholeDay() {
+        let range = date(15, 45).dayRange
+        XCTAssertEqual(range.lowerBound, date(0, 0))
+        XCTAssertEqual(range.upperBound, date(0, 0, dayOffset: 1))
+        XCTAssertTrue(range.contains(date(23, 59)))
+    }
+
+    func testNewTaskIsStoredOnStartOfDay() {
+        let task = PlannerTask(title: "Gym", day: date(18, 30))
+        XCTAssertEqual(task.day, date(0, 0))
+        XCTAssertFalse(task.isDone)
+    }
 }
