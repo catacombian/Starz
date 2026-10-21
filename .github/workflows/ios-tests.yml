@@ -12,18 +12,18 @@ concurrency:
 jobs:
   test:
     name: Run Starz unit tests
-    runs-on: macos-26
+    runs-on: macos-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Select an available iPhone simulator
+      - name: Select an available iOS simulator
         id: simulator
         shell: bash
         run: |
-          device_id="$(xcrun simctl list devices available -j | python3 -c 'import json, sys; data = json.load(sys.stdin); devices = [device for runtime_devices in data["devices"].values() for device in runtime_devices if device["isAvailable"] and device["name"].startswith("iPhone")]; print(devices[0]["udid"] if devices else "")')"
+          device_id="$(xcrun simctl list devices available -j | python3 -c 'import json, sys; data = json.load(sys.stdin); devices = [device for runtime_devices in data["devices"].values() for device in runtime_devices if device["isAvailable"] and device["name"].startswith(("iPhone", "iPad"))]; devices.sort(key=lambda device: not device["name"].startswith("iPhone")); print(devices[0]["udid"] if devices else "")')"
           if [[ -z "$device_id" ]]; then
-            echo "No available iPhone simulator was found on this runner." >&2
+            echo "No available iPhone or iPad simulator was found on this runner." >&2
             exit 1
           fi
           echo "udid=$device_id" >> "$GITHUB_OUTPUT"
@@ -35,6 +35,7 @@ jobs:
             -scheme Starz \
             -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
             -only-testing:StarzTests \
+            -parallel-testing-enabled NO \
             -resultBundlePath "$RUNNER_TEMP/Starz.xcresult" \
             CODE_SIGNING_ALLOWED=NO
 
