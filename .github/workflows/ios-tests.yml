@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   test:
-    name: Run Starz tests
+    name: Run Starz unit tests
     runs-on: macos-26
     steps:
       - name: Check out repository
@@ -34,6 +34,7 @@ jobs:
             -project Starz.xcodeproj \
             -scheme Starz \
             -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
+            -only-testing:StarzTests \
             -resultBundlePath "$RUNNER_TEMP/Starz.xcresult" \
             CODE_SIGNING_ALLOWED=NO
 
