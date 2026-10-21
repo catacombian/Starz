@@ -1,0 +1,47 @@
+name: iOS Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ios-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Run Starz tests
+    runs-on: macos-26
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Select an available iPhone simulator
+        id: simulator
+        shell: bash
+        run: |
+          device_id="$(xcrun simctl list devices available -j | python3 -c 'import json, sys; data = json.load(sys.stdin); devices = [device for runtime_devices in data["devices"].values() for device in runtime_devices if device["isAvailable"] and device["name"].startswith("iPhone")]; print(devices[0]["udid"] if devices else "")')"
+          if [[ -z "$device_id" ]]; then
+            echo "No available iPhone simulator was found on this runner." >&2
+            exit 1
+          fi
+          echo "udid=$device_id" >> "$GITHUB_OUTPUT"
+
+      - name: Run tests
+        run: |
+          xcodebuild test \
+            -project Starz.xcodeproj \
+            -scheme Starz \
+            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
+            -resultBundlePath "$RUNNER_TEMP/Starz.xcresult" \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Starz-test-results
+          path: ${{ runner.temp }}/Starz.xcresult
+          if-no-files-found: ignore
+          retention-days: 14
