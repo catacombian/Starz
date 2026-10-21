@@ -8,6 +8,8 @@ import SwiftData
 
 /// Month calendar: browse months and tap a day to see its tasks.
 struct CalendarView: View {
+    /// "This current tide": closes the calendar and shows today's list.
+    let onShowToday: () -> Void
     @State private var selectedDay = Calendar.current.startOfDay(for: .now)
     /// First day of the month being shown.
     @State private var month = Date.now.startOfMonth
@@ -33,7 +35,7 @@ struct CalendarView: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Today") { goToToday() }
+                Button("This current tide", action: onShowToday)
                     .font(.headline)
             }
         }
@@ -72,13 +74,6 @@ struct CalendarView: View {
     private func showMonth(offset: Int) {
         guard let newMonth = Calendar.current.date(byAdding: .month, value: offset, to: month) else { return }
         withAnimation(.snappy) { month = newMonth }
-    }
-
-    private func goToToday() {
-        withAnimation(.snappy) {
-            selectedDay = Calendar.current.startOfDay(for: .now)
-            month = Date.now.startOfMonth
-        }
     }
 }
 
@@ -225,7 +220,6 @@ private struct DayTasks: View {
     let day: Date
     let onEdit: (PlannerTask) -> Void
     @Query private var tasks: [PlannerTask]
-    @Environment(\.modelContext) private var modelContext
 
     init(day: Date, onEdit: @escaping (PlannerTask) -> Void) {
         self.day = day
@@ -248,77 +242,11 @@ private struct DayTasks: View {
                 Text("No tasks")
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, minHeight: 72)
-                    .background(Color.card, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+                    .background(Color.card, in: RoundedRectangle(cornerRadius: 32, style: .continuous))
             } else {
-                VStack(spacing: 0) {
-                    ForEach(tasks) { task in
-                        CalendarTaskRow(task: task) { onEdit(task) }
-                            .contextMenu {
-                                Button(task.isDone ? "Mark as not done" : "Mark as done", systemImage: "checkmark.circle") {
-                                    withAnimation { task.toggleDone() }
-                                }
-                                Button("Delete", systemImage: "trash", role: .destructive) {
-                                    withAnimation { modelContext.deleteTask(task) }
-                                }
-                            }
-                        if task.id != tasks.last?.id {
-                            Divider()
-                        }
-                    }
-                }
-                .background(Color.card, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
-                .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+                TaskCard(tasks: tasks, onEdit: onEdit)
             }
         }
-    }
-}
-
-/// Task row with the time on the left, as in the calendar mockup.
-private struct CalendarTaskRow: View {
-    let task: PlannerTask
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 16) {
-                Group {
-                    if let time = task.time {
-                        Text(time, format: .dateTime.hour().minute())
-                    } else {
-                        Text("–")
-                    }
-                }
-                .font(.headline)
-                .monospacedDigit()
-                .foregroundStyle(task.isDone ? Color.secondary : Color.accentPurpleLight)
-                .frame(width: 56, alignment: .leading)
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(task.title)
-                        .strikethrough(task.isDone)
-                        .foregroundStyle(task.isDone ? .secondary : .primary)
-                    if !task.details.isEmpty {
-                        Text(task.details)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-                if task.isDone {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(Color.mint)
-                        .accessibilityLabel("Done")
-                }
-            }
-            .multilineTextAlignment(.leading)
-            .padding(.horizontal, 18)
-            .padding(.vertical, 14)
-            .frame(minHeight: 72)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
     }
 }
 
@@ -348,7 +276,7 @@ extension Date {
 
 #Preview {
     NavigationStack {
-        CalendarView()
+        CalendarView(onShowToday: {})
     }
     .preferredColorScheme(.dark)
     .modelContainer(for: PlannerTask.self, inMemory: true)

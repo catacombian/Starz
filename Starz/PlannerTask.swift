@@ -22,6 +22,10 @@ final class PlannerTask {
     var time: Date?
     var isDone: Bool
     var createdAt: Date
+    /// The regular event (`Series`) this task is a copy of, or nil for a one-off task.
+    var seriesID: UUID?
+    /// How the regular event repeats (daily or yearly), or nil for a one-off task.
+    var recurrence: Recurrence?
 
     init(title: String, details: String = "", day: Date, time: Date? = nil) {
         self.id = UUID()
@@ -64,7 +68,9 @@ extension PlannerTask {
 
 extension ModelContext {
     /// Deletes a task together with its pending reminders.
+    /// For a copy of a regular event this is "Only this event": the day is remembered so it isn't recreated.
     func deleteTask(_ task: PlannerTask) {
+        series(of: task)?.deletedDates.append(task.day.dayKey)
         Reminders.cancel(for: task)
         delete(task)
     }

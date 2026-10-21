@@ -12,6 +12,7 @@ Personal, lightweight planner for a single user (me). Native iOS app: SwiftUI + 
 - If a task has a time, schedule two local notifications: 1 hour before and 10 minutes before.
   Skip any that are already in the past. Cancel/reschedule on edit, delete, or completion.
 - Calendar dots: no tasks = no dot; some tasks open = purple dot; all tasks done = mint dot.
+- Calendar view and TodayView must use the shared EventRow. Long-press action is ‘Done’ for unticked items and ‘Undone’ for ticked ones.
 
 ## Design
 - Dark, minimal, native iOS glass effect (Liquid Glass) on floating elements only: top buttons, add sheet, New task button.

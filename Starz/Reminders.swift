@@ -4,12 +4,17 @@
 //
 
 import Foundation
+import SwiftData
 import UserNotifications
 
 /// Schedules two local notifications for a timed task: 1 hour and 10 minutes before.
 enum Reminders {
     /// Minutes before the task time, with the text shown in the notification.
-    static let offsets: [(minutes: Int, text: String)] = [
+    typealias Offset = (minutes: Int, text: String)
+    /// One pending notification: which task, which offset, and when it fires.
+    typealias Reminder = (task: PlannerTask, offset: Offset, fireDate: Date)
+
+    static let offsets: [Offset] = [
         (60, "In 1 hour"),
         (10, "In 10 minutes"),
     ]
@@ -32,25 +37,63 @@ enum Reminders {
         guard !task.isDone, let time = task.time else { return }
 
         let center = UNUserNotificationCenter.current()
-        let now = Date.now
+        let fireDates = fireDates(for: time)
         for offset in offsets {
             let fireDate = time.addingTimeInterval(TimeInterval(-offset.minutes * 60))
-            guard fireDate > now else { continue }
-
-            let content = UNMutableNotificationContent()
-            content.title = task.title
-            content.body = "\(offset.text) · \(time.formatted(date: .omitted, time: .shortened))"
-            content.sound = .default
-
-            let parts = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
-            let trigger = UNCalendarNotificationTrigger(dateMatching: parts, repeats: false)
-            let request = UNNotificationRequest(
-                identifier: identifier(task.id, offset.minutes),
-                content: content,
-                trigger: trigger
-            )
-            center.add(request)
+            guard fireDates.contains(fireDate) else { continue }
+            center.add(request(for: task, offset: offset, fireDate: fireDate))
         }
+    }
+
+    /// iOS keeps at most 64 pending local notifications per app.
+    static let pendingLimit = 64
+
+    /// The soonest reminders of all open timed tasks, at most `limit` of them.
+    static func upcoming(
+        for tasks: [PlannerTask], now: Date = .now, limit: Int = pendingLimit
+    ) -> [Reminder] {
+        var all: [Reminder] = []
+        for task in tasks where !task.isDone {
+            guard let time = task.time else { continue }
+            for offset in offsets {
+                let fireDate = time.addingTimeInterval(TimeInterval(-offset.minutes * 60))
+                if fireDate > now { all.append((task, offset, fireDate)) }
+            }
+        }
+        return Array(all.sorted { $0.fireDate < $1.fireDate }.prefix(limit))
+    }
+
+    /// Replaces all pending reminders with the soonest 64. Call on every app open,
+    /// so reminders further out than the limit get scheduled once they move closer.
+    static func rescheduleAll(in context: ModelContext, now: Date = .now) {
+        let today = Calendar.current.startOfDay(for: now)
+        let descriptor = FetchDescriptor<PlannerTask>(predicate: #Predicate { !$0.isDone && $0.day >= today })
+        let tasks = (try? context.fetch(descriptor)) ?? []
+
+        let center = UNUserNotificationCenter.current()
+        center.removeAllPendingNotificationRequests()
+        for reminder in upcoming(for: tasks, now: now) {
+            center.add(request(for: reminder.task, offset: reminder.offset, fireDate: reminder.fireDate))
+        }
+    }
+
+    private static func request(
+        for task: PlannerTask, offset: Offset, fireDate: Date
+    ) -> UNNotificationRequest {
+        let content = UNMutableNotificationContent()
+        content.title = task.title
+        if let time = task.time {
+            content.body = "\(offset.text) · \(time.formatted(date: .omitted, time: .shortened))"
+        }
+        content.sound = .default
+
+        let parts = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: parts, repeats: false)
+        return UNNotificationRequest(
+            identifier: identifier(task.id, offset.minutes),
+            content: content,
+            trigger: trigger
+        )
     }
 
     /// Removes any pending reminders for the task. Call before deleting it.

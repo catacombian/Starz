@@ -24,6 +24,8 @@
 		58EBD0C51F5D8FFDF2463CDD /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294B3B32DCAA96A4569F8C18 /* Theme.swift */; };
 		5A9199FC5A81EE20860295D8 /* TaskEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E4D2DA8CA52C002D83B75C /* TaskEditorSheet.swift */; };
 		6D527DFFD0245CAF4F9AACBE /* Reminders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F40F2850EC7CAC3BDB54C8 /* Reminders.swift */; };
+		A1B2C3D40000000000000001 /* Series.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000003 /* Series.swift */; };
+		A1B2C3D40000000000000002 /* Series.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000003 /* Series.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +87,7 @@
 		294B3B32DCAA96A4569F8C18 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		62E4D2DA8CA52C002D83B75C /* TaskEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorSheet.swift; sourceTree = "<group>"; };
 		AE15A06F5767E8606E53EC5C /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000003 /* Series.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Series.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -169,6 +172,7 @@
 				294B3B32DCAA96A4569F8C18 /* Theme.swift */,
 				1D2B3F7F30840561004789C7 /* TodayView.swift */,
 				1D2B3F8130840561004789C7 /* PlannerTask.swift */,
+				A1B2C3D40000000000000003 /* Series.swift */,
 				1D2B3F8330840563004789C7 /* Assets.xcassets */,
 				1D2B3F8530840563004789C7 /* Starz.entitlements */,
 				1D2B3F8630840563004789C7 /* Preview Content */,
@@ -377,6 +381,7 @@
 			files = (
 				1D2B3F8030840561004789C7 /* TodayView.swift in Sources */,
 				1D2B3F8230840561004789C7 /* PlannerTask.swift in Sources */,
+				A1B2C3D40000000000000001 /* Series.swift in Sources */,
 				1D2B3F7E30840561004789C7 /* StarzApp.swift in Sources */,
 				4DBBB0B0D9FF85597C3D2907 /* CalendarView.swift in Sources */,
 				6D527DFFD0245CAF4F9AACBE /* Reminders.swift in Sources */,
@@ -407,6 +412,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1D35FB263087EA1F009666DC /* PlannerTask.swift in Sources */,
+				A1B2C3D40000000000000002 /* Series.swift in Sources */,
 				1D35FB293087EB00009666DC /* Reminders.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -559,6 +565,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Starz;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -598,6 +606,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Starz;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

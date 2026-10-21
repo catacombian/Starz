@@ -44,7 +44,7 @@ struct Provider: TimelineProvider {
         let config = ModelConfiguration(
             groupContainer: .identifier("group.com.manhutava.Starz")
         )
-        guard let container = try? ModelContainer(for: PlannerTask.self, configurations: config) else {
+        guard let container = try? ModelContainer(for: PlannerTask.self, Series.self, configurations: config) else {
             return []
         }
         let context = ModelContext(container)
@@ -80,7 +80,9 @@ struct PlannerWidgetView: View {
             }
             ForEach(entry.rows.prefix(limit)) { row in
                 HStack(spacing: 8) {
-                    Image(systemName: "circle").foregroundStyle(.secondary)
+                    Image(systemName: "star")
+                        .font(.system(size: 16, weight: .regular, design: .rounded))
+                        .foregroundStyle(Color(red: 124.0 / 255, green: 77.0 / 255, blue: 1))
                     Text(row.title).lineLimit(1)
                     Spacer(minLength: 0)
                     if let t = row.time {

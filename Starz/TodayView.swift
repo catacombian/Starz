@@ -8,33 +8,44 @@
 import SwiftUI
 import SwiftData
 
+/// What the root screen shows: the day list, with or without the calendar pushed on top.
+struct DayNavigation {
+    /// Re-set when the date changes so the screen rolls over at midnight.
+    var day = Date.now
+    var showCalendar = false
+
+    /// "This current tide": closes the calendar and shows today's list.
+    mutating func showToday(now: Date = .now) {
+        day = now
+        showCalendar = false
+    }
+}
+
 /// Root screen: today's tasks.
 struct TodayView: View {
-    /// Re-set when the date changes so the screen rolls over at midnight.
-    @State private var today = Date.now
-    @State private var showCalendar = false
+    @State private var navigation = DayNavigation()
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         NavigationStack {
-            TodayContent(day: today)
+            TodayContent(day: navigation.day)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button("Calendar", systemImage: "calendar") {
-                            showCalendar = true
+                            navigation.showCalendar = true
                         }
                     }
                 }
-                .navigationDestination(isPresented: $showCalendar) {
-                    CalendarView()
+                .navigationDestination(isPresented: $navigation.showCalendar) {
+                    CalendarView { navigation.showToday() }
                 }
         }
         .tint(.white)
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active { today = .now }
+            if phase == .active { navigation.day = .now }
         }
         .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged).receive(on: RunLoop.main)) { _ in
-            today = .now
+            navigation.day = .now
         }
     }
 }
@@ -43,7 +54,6 @@ struct TodayView: View {
 private struct TodayContent: View {
     let day: Date
     @Query private var tasks: [PlannerTask]
-    @Environment(\.modelContext) private var modelContext
     @State private var editor: EditorTarget?
 
     init(day: Date) {
@@ -62,7 +72,7 @@ private struct TodayContent: View {
                 if tasks.isEmpty {
                     emptyState
                 } else {
-                    TaskCard(tasks: tasks, onToggle: toggle, onEdit: { editor = .edit($0) }, onDelete: delete)
+                    TaskCard(tasks: tasks, onEdit: { editor = .edit($0) })
                 }
             }
             .padding(.horizontal, 16)
@@ -108,18 +118,6 @@ private struct TodayContent: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, 48)
     }
-
-    private func toggle(_ task: PlannerTask) {
-        withAnimation(.snappy) {
-            task.toggleDone()
-        }
-    }
-
-    private func delete(_ task: PlannerTask) {
-        withAnimation {
-            modelContext.deleteTask(task)
-        }
-    }
 }
 
 /// Floating glass "New task" button. Disabled once the day is full.
@@ -161,21 +159,15 @@ private struct NewTaskLabelStyle: LabelStyle {
     }
 }
 
-/// Dark rounded card listing tasks with checkboxes.
+/// Dark rounded card listing tasks, used by Today and Calendar.
 struct TaskCard: View {
     let tasks: [PlannerTask]
-    let onToggle: (PlannerTask) -> Void
     let onEdit: (PlannerTask) -> Void
-    let onDelete: (PlannerTask) -> Void
 
     var body: some View {
         VStack(spacing: 0) {
             ForEach(tasks) { task in
-                TaskRow(task: task, onToggle: { onToggle(task) }, onEdit: { onEdit(task) })
-                    .contextMenu {
-                        Button("Edit", systemImage: "pencil") { onEdit(task) }
-                        Button("Delete", systemImage: "trash", role: .destructive) { onDelete(task) }
-                    }
+                EventRow(task: task, onEdit: { onEdit(task) })
                 if task.id != tasks.last?.id {
                     Divider().padding(.leading, 60)
                 }
@@ -186,16 +178,44 @@ struct TaskCard: View {
     }
 }
 
-/// One task: checkbox, title, optional description and optional time.
-struct TaskRow: View {
+/// Long-press actions shared by Today and Calendar: "Make regular" and delete.
+/// A copy of a regular event offers two ways to delete instead of one.
+struct RegularEventMenuItems: View {
     let task: PlannerTask
-    let onToggle: () -> Void
+    @Environment(\.modelContext) private var modelContext
+
+    var body: some View {
+        if task.seriesID == nil {
+            Menu("Make regular", systemImage: "repeat") {
+                Button("Every day") { modelContext.makeRegular(task, .daily) }
+                Button("Every year") { modelContext.makeRegular(task, .yearly) }
+            }
+            Button("Delete", systemImage: "trash", role: .destructive) {
+                withAnimation { modelContext.deleteTask(task) }
+            }
+        } else {
+            Menu("Delete", systemImage: "trash") {
+                Button("Only this event", role: .destructive) {
+                    withAnimation { modelContext.deleteTask(task) }
+                }
+                Button("This regular event", role: .destructive) {
+                    withAnimation { modelContext.deleteSeries(of: task) }
+                }
+            }
+        }
+    }
+}
+
+/// One task, shared by Today and Calendar: checkbox, title, optional description and time,
+/// and the long-press menu. Tapping the checkbox or "Done"/"Undone" ticks and unticks it.
+struct EventRow: View {
+    let task: PlannerTask
     let onEdit: () -> Void
 
     var body: some View {
         HStack(spacing: 0) {
-            Button(action: onToggle) {
-                CheckCircle(isOn: task.isDone)
+            Button(action: toggle) {
+                CheckStar(isOn: task.isDone)
                     .frame(width: 60, height: 60)
                     .contentShape(Rectangle())
             }
@@ -205,9 +225,17 @@ struct TaskRow: View {
             Button(action: onEdit) {
                 HStack(spacing: 12) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(task.title)
-                            .strikethrough(task.isDone)
-                            .foregroundStyle(task.isDone ? .secondary : .primary)
+                        HStack(spacing: 6) {
+                            Text(task.title)
+                                .strikethrough(task.isDone)
+                                .foregroundStyle(task.isDone ? .secondary : .primary)
+                            if task.seriesID != nil {
+                                Image(systemName: "repeat")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .accessibilityLabel(task.recurrence == .yearly ? "Repeats every year" : "Repeats")
+                            }
+                        }
                         if !task.details.isEmpty {
                             Text(task.details)
                                 .font(.subheadline)
@@ -233,28 +261,78 @@ struct TaskRow: View {
             .accessibilityHint("Edit task")
         }
         .padding(.leading, 4)
+        .contextMenu {
+            Button(Self.doneActionTitle(isDone: task.isDone), systemImage: task.isDone ? "star" : "star.fill", action: toggle)
+            Button("Edit", systemImage: "pencil", action: onEdit)
+            RegularEventMenuItems(task: task)
+        }
+    }
+
+    func toggle() {
+        withAnimation(.snappy) {
+            task.toggleDone()
+        }
+    }
+
+    /// Long-press action: "Done" for unticked items, "Undone" for ticked ones.
+    static func doneActionTitle(isDone: Bool) -> String {
+        isDone ? "Undone" : "Done"
     }
 }
 
-/// Empty ring when open; filled white circle with a checkmark when done.
-struct CheckCircle: View {
+/// Purple outlined star when open; mint-filled star when done.
+struct CheckStar: View {
     let isOn: Bool
 
     var body: some View {
-        ZStack {
-            Circle()
-                .strokeBorder(Color.white.opacity(0.3), lineWidth: 1.5)
-                .opacity(isOn ? 0 : 1)
-            Circle()
-                .fill(.white)
-                .opacity(isOn ? 1 : 0)
-            Image(systemName: "checkmark")
-                .font(.system(size: 13, weight: .bold))
-                .foregroundStyle(.black)
-                .opacity(isOn ? 1 : 0)
-                .scaleEffect(isOn ? 1 : 0.5)
+        RoundedStar()
+            .fill(isOn ? Color.mint : .clear)
+            .overlay {
+                RoundedStar()
+                    .stroke(Color.accentPurple, style: StrokeStyle(lineWidth: 2.5, lineJoin: .round))
+            }
+        .frame(width: 32, height: 32)
+    }
+}
+
+struct RoundedStar: Shape {
+    func path(in rect: CGRect) -> Path {
+        let center = CGPoint(x: rect.midX, y: rect.midY)
+        let outerRadius = min(rect.width, rect.height) / 2
+        let innerRadius = outerRadius * 0.46
+        let vertices = (0..<10).map { index -> CGPoint in
+            let angle = -CGFloat.pi / 2 + CGFloat(index) * CGFloat.pi / 5
+            let radius = index.isMultiple(of: 2) ? outerRadius : innerRadius
+            return CGPoint(
+                x: center.x + cos(angle) * radius,
+                y: center.y + sin(angle) * radius
+            )
         }
-        .frame(width: 28, height: 28)
+
+        let cornerRadius = outerRadius * 0.11
+        let before = vertices.indices.map { index in
+            point(from: vertices[index], toward: vertices[(index + 9) % 10], distance: cornerRadius)
+        }
+        let after = vertices.indices.map { index in
+            point(from: vertices[index], toward: vertices[(index + 1) % 10], distance: cornerRadius)
+        }
+
+        var path = Path()
+        path.move(to: before[0])
+        for index in vertices.indices {
+            path.addQuadCurve(to: after[index], control: vertices[index])
+            path.addLine(to: before[(index + 1) % vertices.count])
+        }
+        path.closeSubpath()
+        return path
+    }
+
+    private func point(from start: CGPoint, toward end: CGPoint, distance: CGFloat) -> CGPoint {
+        let dx = end.x - start.x
+        let dy = end.y - start.y
+        let length = hypot(dx, dy)
+        let fraction = min(distance / length, 0.5)
+        return CGPoint(x: start.x + dx * fraction, y: start.y + dy * fraction)
     }
 }
 
