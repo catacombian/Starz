@@ -21,6 +21,19 @@ Personal, lightweight planner for a single user (me). Native iOS app: SwiftUI + 
 - System font (SF Pro), large rounded corners, touch targets at least 44pt.
 - Reference mockups are in the design/ folder.
 
+## Widget
+Home screen widget (small and medium) showing today's open tasks. Target `PlannerWidgetExtensionExtension`, code in `PlannerWidgetExtension/`. The `PlannerWidget/` folders are old copies and are not compiled.
+
+- Shared data: the app and widget use one SwiftData store in the App Group `group.com.manhutava.Starz`, opened with `SharedStore.makeContainer()`. `PlannerTask.swift`, `Series.swift` and `Reminders.swift` are compiled into both targets.
+- Writing: every change must end in `ModelContext.commit()`, which saves first and then reloads the widget. Use `addTask`, `updateTask`, `deleteTask`, `deleteSeries`, `makeRegular` or `toggleDone`, which already call it. Don't rely on autosave: the widget reads from disk, so unsaved changes don't reach it. New actions (e.g. reordering) must call `commit()` too.
+- Reading: the widget opens a new container and context on every load with `SharedStore.withFreshContext`, so there is no stale cache. The container must outlive its context, or the app crashes.
+- What it lists: `PlannerTask.openTasks(on:in:)`, today's tasks that aren't done, timed ones first in time order. It shows up to 3 on small and 5 on medium. Completed tasks disappear from the widget but stay crossed out in the app.
+- Midnight: the timeline has two entries, now and the next midnight (already holding the next day's tasks), with policy `.after(midnight)`.
+- Reload kind: `SharedStore.widgetKind` (`"PlannerWidgetExtension"`). A wrong kind silently does nothing.
+- App lifecycle: going to the background calls `commit()` once more as a safety net.
+- Check-off: tapping a row's star runs `CompleteTaskIntent` in the widget process and writes to the shared store. It sets the task done rather than toggling it, so a double tap can't undo it. The app has no extra refresh code; its `@Query` picked up writes from a second container in tests.
+- Moving dates: the date field appears only when editing, and not for copies of a regular event, because `topUp` would recreate the moved copy on its original day.
+
 ## Working style
 - Build step by step: data model, Today, Add Task, notifications, calendar, polish.
 - Keep the code simple and readable. Explain what you changed after each step.

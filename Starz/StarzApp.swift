@@ -17,10 +17,11 @@ struct StarzApp: App {
     /// SwiftData store kept in the App Group so the widget can read the same tasks.
     let container: ModelContainer = {
         // UI tests start from an empty, throwaway store.
-        let config = ProcessInfo.processInfo.arguments.contains("-ui-testing")
-            ? ModelConfiguration(isStoredInMemoryOnly: true)
-            : ModelConfiguration(groupContainer: .identifier("group.com.manhutava.Starz"))
-        return try! ModelContainer(for: PlannerTask.self, Series.self, configurations: config)
+        if ProcessInfo.processInfo.arguments.contains("-ui-testing") {
+            let config = ModelConfiguration(isStoredInMemoryOnly: true)
+            return try! ModelContainer(for: PlannerTask.self, Series.self, configurations: config)
+        }
+        return try! SharedStore.makeContainer()
     }()
 
     init() {
@@ -35,6 +36,8 @@ struct StarzApp: App {
         .modelContainer(container)
         .onChange(of: scenePhase, initial: true) { _, phase in
             if phase == .active { refresh() }
+            // Safety net: nothing unsaved is left behind, and the widget gets one last look.
+            if phase == .background { container.mainContext.commit() }
         }
     }
 

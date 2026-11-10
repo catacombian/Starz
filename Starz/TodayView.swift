@@ -14,9 +14,9 @@ struct DayNavigation {
     var day = Date.now
     var showCalendar = false
 
-    /// "This current tide": closes the calendar and shows today's list.
-    mutating func showToday(now: Date = .now) {
-        day = now
+    /// "This current tide": closes the calendar and shows the list for the selected day (today by default).
+    mutating func show(day selected: Date = .now) {
+        day = selected
         showCalendar = false
     }
 }
@@ -37,7 +37,7 @@ struct TodayView: View {
                     }
                 }
                 .navigationDestination(isPresented: $navigation.showCalendar) {
-                    CalendarView { navigation.showToday() }
+                    CalendarView { navigation.show(day: $0) }
                 }
         }
         .tint(.white)
@@ -120,32 +120,55 @@ private struct TodayContent: View {
     }
 }
 
-/// Floating glass "New task" button. Disabled once the day is full.
+/// Floating glass "New task" button. On a full day it looks dimmed, and tapping it
+/// shows a short message instead of opening the sheet.
 struct NewTaskButton: View {
     let isFull: Bool
     let action: () -> Void
+    /// Set while the message shows. A new value on each tap restarts its timer.
+    @State private var messageID: UUID?
 
     var body: some View {
         VStack(spacing: 8) {
-            if isFull {
-                Text("Daily limit of \(PlannerTask.maxPerDay) tasks reached")
+            if messageID != nil {
+                Text(PlannerTask.dayFullMessage)
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 16)
+                    .frame(minHeight: 44)
+                    .floatingGlass(in: Capsule())
+                    .transition(.opacity)
             }
-            Button(action: action) {
+            Button(action: tap) {
                 Label("New task", systemImage: "plus")
                     .font(.headline)
                     .labelStyle(NewTaskLabelStyle())
+                    // Dims the label, not the glass: taps on a see-through button reach the row behind it.
+                    .opacity(isFull ? 0.5 : 1)
                     .frame(maxWidth: .infinity, minHeight: 56)
                     .contentShape(Capsule())
             }
             .buttonStyle(.plain)
             .floatingGlass(in: Capsule())
-            .disabled(isFull)
-            .opacity(isFull ? 0.5 : 1)
+            .accessibilityHint(isFull ? PlannerTask.dayFullMessage : "")
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 8)
+        .task(id: messageID) {
+            guard messageID != nil else { return }
+            // Throws when a newer tap replaces this timer.
+            guard (try? await Task.sleep(for: .seconds(2.5))) != nil else { return }
+            withAnimation { messageID = nil }
+        }
+        .onChange(of: isFull) { _, full in
+            if !full { messageID = nil }
+        }
+    }
+
+    private func tap() {
+        guard isFull else { return action() }
+        withAnimation { messageID = UUID() }
+        AccessibilityNotification.Announcement(PlannerTask.dayFullMessage).post()
     }
 }
 

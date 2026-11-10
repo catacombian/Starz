@@ -117,7 +117,7 @@ extension Series {
                 created.append(copy)
             }
         }
-        if !created.isEmpty { try? context.save() }
+        if !created.isEmpty { context.commit() }
         return created
     }
 }
@@ -172,7 +172,7 @@ extension ModelContext {
         task.recurrence = recurrence
         series.fillComingYears(after: task.day, in: self)
         Series.topUp(in: self)
-        try? save()
+        commit()
         Reminders.rescheduleAll(in: self)
     }
 
@@ -193,6 +193,7 @@ extension ModelContext {
             }
         }
         if let series = series(of: task) { delete(series) }
+        commit()
     }
 }
 

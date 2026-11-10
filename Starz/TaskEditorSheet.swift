@@ -29,20 +29,29 @@ struct TaskEditorSheet: View {
 
     @State private var title = ""
     @State private var details = ""
+    /// The most characters the description may have. See `PlannerTask.detailsCap`.
+    @State private var detailsCap = PlannerTask.maxDetailsLength
     @State private var hasTime = false
     @State private var time = Date.now
+    /// The date the task is on. Changing it while editing moves the task.
+    @State private var day: Date
     @State private var errorMessage: String?
+    /// Set by Save, Cancel and Delete. Any other way out (swiping the sheet away) keeps the edits.
+    @State private var isClosed = false
 
     init(target: EditorTarget) {
         self.target = target
         switch target {
         case .new(let day):
             _time = State(initialValue: Self.suggestedTime(for: day))
+            _day = State(initialValue: day)
         case .edit(let task):
             _title = State(initialValue: task.title)
             _details = State(initialValue: task.details)
+            _detailsCap = State(initialValue: PlannerTask.detailsCap(for: task.details))
             _hasTime = State(initialValue: task.time != nil)
             _time = State(initialValue: task.time ?? Self.suggestedTime(for: task.day))
+            _day = State(initialValue: task.day)
         }
     }
 
@@ -51,11 +60,10 @@ struct TaskEditorSheet: View {
         return false
     }
 
-    private var day: Date {
-        switch target {
-        case .new(let day): day
-        case .edit(let task): task.day
-        }
+    /// Copies of a regular event stay on their date: `topUp` would recreate a moved one.
+    private var canChangeDate: Bool {
+        if case .edit(let task) = target { return task.seriesID == nil }
+        return false
     }
 
     private var trimmedTitle: String {
@@ -66,44 +74,65 @@ struct TaskEditorSheet: View {
         VStack(alignment: .leading, spacing: 24) {
             topBar
 
-            field("Title", required: true) {
-                TextField("What do you need to do?", text: $title)
-                    .focused($titleFocused)
-                    .submitLabel(.done)
-                    .padding(16)
-                    .fieldBackground()
-            }
-
-            field("Description (optional)") {
-                TextField("Add details", text: $details, axis: .vertical)
-                    .lineLimit(3...6)
-                    .padding(16)
-                    .frame(minHeight: 100, alignment: .topLeading)
-                    .fieldBackground()
-            }
-
-            field("Time (optional)") {
-                VStack(alignment: .leading, spacing: 12) {
-                    timeRow
-                    if hasTime {
-                        reminderNote
-                    }
-                }
-            }
-
             if let errorMessage {
                 Text(errorMessage)
                     .font(.footnote)
                     .foregroundStyle(.red)
             }
 
-            Spacer(minLength: 0)
+            // Only the fields scroll, so the keyboard can't push Save off screen.
+            GeometryReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 24) {
+                        field("Title", required: true) {
+                            TextField("What do you need to do?", text: $title)
+                                .focused($titleFocused)
+                                .submitLabel(.done)
+                                .padding(16)
+                                .fieldBackground()
+                        }
 
-            if case .edit(let task) = target {
-                Button("Delete task", systemImage: "trash", role: .destructive) {
-                    delete(task)
+                        field("Description (optional)") {
+                            TextField("Add details", text: $details, axis: .vertical)
+                                .lineLimit(3...6)
+                                .padding(16)
+                                .frame(minHeight: 100, alignment: .topLeading)
+                                .fieldBackground()
+                            detailsCounter
+                        }
+
+                        if canChangeDate {
+                            field("Date") {
+                                DatePicker("Date", selection: $day, displayedComponents: .date)
+                                    .labelsHidden()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.horizontal, 16)
+                                    .frame(minHeight: 60)
+                                    .fieldBackground()
+                            }
+                        }
+
+                        field("Time (optional)") {
+                            VStack(alignment: .leading, spacing: 12) {
+                                timeRow
+                                if hasTime {
+                                    reminderNote
+                                }
+                            }
+                        }
+
+                        Spacer(minLength: 0)
+
+                        if case .edit(let task) = target {
+                            Button("Delete task", systemImage: "trash", role: .destructive) {
+                                delete(task)
+                            }
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                        }
+                    }
+                    .frame(minHeight: proxy.size.height, alignment: .top)
                 }
-                .frame(maxWidth: .infinity, minHeight: 44)
+                .scrollBounceBehavior(.basedOnSize)
             }
         }
         .padding(.horizontal, 20)
@@ -117,11 +146,17 @@ struct TaskEditorSheet: View {
         .onChange(of: hasTime) { _, isOn in
             if isOn { Reminders.requestPermission() }
         }
+        .onChange(of: details) { old, new in
+            details = PlannerTask.limitedDetails(new, previous: old, cap: detailsCap)
+            detailsCap = PlannerTask.detailsCap(for: details, current: detailsCap)
+        }
+        .onChange(of: day) { errorMessage = nil }
+        .onDisappear(perform: saveOnSwipe)
     }
 
     private var topBar: some View {
         HStack {
-            Button("Cancel") { dismiss() }
+            Button("Cancel", action: close)
                 .foregroundStyle(Color.accentPurpleLight)
                 .frame(minWidth: 44, minHeight: 44)
             Spacer()
@@ -135,6 +170,21 @@ struct TaskEditorSheet: View {
             Text(isNew ? "New task" : "Edit task")
                 .font(.headline)
                 .accessibilityAddTraits(.isHeader)
+        }
+    }
+
+    /// "164 / 200" under the description, once it is getting close to the limit.
+    @ViewBuilder
+    private var detailsCounter: some View {
+        let count = details.count
+        let limit = PlannerTask.maxDetailsLength
+        if count >= PlannerTask.detailsCounterStart {
+            Text("\(count) / \(limit)")
+                .font(.footnote)
+                .monospacedDigit()
+                .foregroundStyle(count >= limit ? Color.accentPurpleLight : Color.secondary)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .accessibilityLabel("\(count) of \(limit) characters")
         }
     }
 
@@ -193,25 +243,41 @@ struct TaskEditorSheet: View {
         let taskTime = hasTime ? time.onDay(day) : nil
 
         switch target {
-        case .new(let day):
-            let count = (try? modelContext.fetchCount(PlannerTask.descriptor(for: day))) ?? 0
-            guard count < PlannerTask.maxPerDay else {
-                errorMessage = "This day already has \(PlannerTask.maxPerDay) tasks."
+        case .new:
+            guard modelContext.addTask(PlannerTask(title: trimmedTitle, details: details, day: day, time: taskTime)) else {
+                errorMessage = PlannerTask.dayFullMessage
                 return
             }
-            let task = PlannerTask(title: trimmedTitle, details: details, day: day, time: taskTime)
-            modelContext.insert(task)
-            Reminders.update(for: task)
         case .edit(let task):
-            task.title = trimmedTitle
-            task.details = details
-            task.time = taskTime
-            Reminders.update(for: task)
+            guard modelContext.updateTask(task, title: trimmedTitle, details: details, day: day, time: taskTime) else {
+                errorMessage = PlannerTask.moveTargetFullMessage
+                return
+            }
         }
+        close()
+    }
+
+    /// Swiping the sheet away saves the edits. An empty title keeps the old one, and a date
+    /// on a full day keeps the old date, so the rest of the edits still aren't lost.
+    private func saveOnSwipe() {
+        guard !isClosed, case .edit(let task) = target else { return }
+        let newDay = modelContext.hasRoom(on: day, for: task) ? day : task.day
+        modelContext.updateTask(
+            task,
+            title: trimmedTitle.isEmpty ? task.title : trimmedTitle,
+            details: details,
+            day: newDay,
+            time: hasTime ? time.onDay(newDay) : nil
+        )
+    }
+
+    private func close() {
+        isClosed = true
         dismiss()
     }
 
     private func delete(_ task: PlannerTask) {
+        isClosed = true
         modelContext.deleteTask(task)
         dismiss()
     }

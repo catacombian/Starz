@@ -8,8 +8,8 @@ import SwiftData
 
 /// Month calendar: browse months and tap a day to see its tasks.
 struct CalendarView: View {
-    /// "This current tide": closes the calendar and shows today's list.
-    let onShowToday: () -> Void
+    /// "This current tide": closes the calendar and shows the selected day's list.
+    let onShowDay: (Date) -> Void
     @State private var selectedDay = Calendar.current.startOfDay(for: .now)
     /// First day of the month being shown.
     @State private var month = Date.now.startOfMonth
@@ -35,7 +35,7 @@ struct CalendarView: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("This current tide", action: onShowToday)
+                Button("This current tide") { onShowDay(selectedDay) }
                     .font(.headline)
             }
         }
@@ -276,7 +276,7 @@ extension Date {
 
 #Preview {
     NavigationStack {
-        CalendarView(onShowToday: {})
+        CalendarView(onShowDay: { _ in })
     }
     .preferredColorScheme(.dark)
     .modelContainer(for: PlannerTask.self, inMemory: true)

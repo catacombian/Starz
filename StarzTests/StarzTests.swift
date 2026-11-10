@@ -11,6 +11,8 @@ import SwiftData
 
 final class StarzTests: XCTestCase {
     private let calendar = Calendar.current
+    /// `mainContext` doesn't keep its container alive, so the tests have to.
+    private var containers: [ModelContainer] = []
 
     private func date(_ hour: Int, _ minute: Int, dayOffset: Int = 0) -> Date {
         let day = calendar.date(byAdding: .day, value: dayOffset, to: calendar.startOfDay(for: .now))!
@@ -53,7 +55,9 @@ final class StarzTests: XCTestCase {
     @MainActor
     private func makeContext() throws -> ModelContext {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        return try ModelContainer(for: PlannerTask.self, Series.self, configurations: config).mainContext
+        let container = try ModelContainer(for: PlannerTask.self, Series.self, configurations: config)
+        containers.append(container)
+        return container.mainContext
     }
 
     @MainActor
@@ -186,14 +190,55 @@ final class StarzTests: XCTestCase {
 
     // MARK: - "This current tide"
 
-    func testThisCurrentTideClosesCalendarAndShowsToday() {
-        let now = date(9, 0)
-        for start in [date(12, 0, dayOffset: -40), date(12, 0, dayOffset: 75), now] {
-            var navigation = DayNavigation(day: start, showCalendar: true)
-            navigation.showToday(now: now)
-            XCTAssertFalse(navigation.showCalendar)
-            XCTAssertTrue(calendar.isDate(navigation.day, inSameDayAs: now))
-        }
+    /// Taps "This current tide" with `selected` picked in the calendar and returns
+    /// the titles the day view loads for the day it ends up showing.
+    @MainActor
+    private func tide(selected: Date, in context: ModelContext) throws -> [String] {
+        var navigation = DayNavigation(day: date(9, 0), showCalendar: true)
+        navigation.show(day: selected)
+        XCTAssertFalse(navigation.showCalendar)
+        XCTAssertTrue(calendar.isDate(navigation.day, inSameDayAs: selected))
+        return try context.fetch(PlannerTask.descriptor(for: navigation.day)).map(\.title)
+    }
+
+    @MainActor
+    private func contextWithTodayAndTomorrow() throws -> ModelContext {
+        let context = try makeContext()
+        context.insert(PlannerTask(title: "Today task", day: date(0, 0)))
+        context.insert(PlannerTask(title: "Tomorrow task", day: date(0, 0, dayOffset: 1)))
+        return context
+    }
+
+    @MainActor
+    func testThisCurrentTideWithTodaySelected() throws {
+        let context = try contextWithTodayAndTomorrow()
+        XCTAssertEqual(try tide(selected: date(0, 0), in: context), ["Today task"])
+    }
+
+    @MainActor
+    func testThisCurrentTideWithAnotherDayWithEvents() throws {
+        let context = try contextWithTodayAndTomorrow()
+        XCTAssertEqual(try tide(selected: date(0, 0, dayOffset: 1), in: context), ["Tomorrow task"])
+    }
+
+    @MainActor
+    func testThisCurrentTideWithAnEmptyDayShowsNothing() throws {
+        let context = try contextWithTodayAndTomorrow()
+        XCTAssertEqual(try tide(selected: date(0, 0, dayOffset: 3), in: context), [], "not today's tasks")
+    }
+
+    @MainActor
+    func testThisCurrentTideWithADayInAnotherMonth() throws {
+        let context = try contextWithTodayAndTomorrow()
+        let otherMonth = calendar.date(byAdding: .month, value: 2, to: date(0, 0))!
+        context.insert(PlannerTask(title: "Later task", day: otherMonth))
+        XCTAssertEqual(try tide(selected: otherMonth, in: context), ["Later task"])
+    }
+
+    func testThisCurrentTideDefaultsToToday() {
+        var navigation = DayNavigation(day: date(12, 0, dayOffset: 40), showCalendar: true)
+        navigation.show()
+        XCTAssertTrue(calendar.isDateInToday(navigation.day))
     }
 
     // MARK: - Make yearly
@@ -261,6 +306,271 @@ final class StarzTests: XCTestCase {
         context.deleteSeries(of: task, now: day(2026, 10, 21))
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<PlannerTask>()), 0)
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<Series>()), 0)
+    }
+
+    // MARK: - Widget: today's list
+
+    private func titles(on day: Date, in context: ModelContext) -> [String] {
+        PlannerTask.openTasks(on: day, in: context).map(\.title)
+    }
+
+    @MainActor
+    func testWidgetListsOnlyTodaysOpenTasks() throws {
+        let context = try makeContext()
+        context.insert(PlannerTask(title: "Yesterday", day: date(0, 0, dayOffset: -1)))
+        context.insert(PlannerTask(title: "Today", day: date(0, 0)))
+        context.insert(PlannerTask(title: "Tomorrow", day: date(0, 0, dayOffset: 1)))
+        let done = PlannerTask(title: "Done", day: date(0, 0))
+        context.insert(done)
+        done.toggleDone()
+
+        XCTAssertEqual(titles(on: date(12, 0), in: context), ["Today"])
+    }
+
+    @MainActor
+    func testWidgetShowsTimedTasksFirstInTimeOrder() throws {
+        let context = try makeContext()
+        context.insert(PlannerTask(title: "No time", day: date(0, 0)))
+        context.insert(PlannerTask(title: "Late", day: date(0, 0), time: date(18, 0)))
+        context.insert(PlannerTask(title: "Early", day: date(0, 0), time: date(9, 0)))
+
+        XCTAssertEqual(titles(on: date(12, 0), in: context), ["Early", "Late", "No time"])
+    }
+
+    @MainActor
+    func testWidgetFollowsADateMovedOutOfAndIntoToday() throws {
+        let context = try makeContext()
+        let task = PlannerTask(title: "Gym", day: date(0, 0), time: date(18, 0))
+        context.addTask(task)
+
+        context.updateTask(task, title: "Gym", details: "", day: date(9, 0, dayOffset: 1), time: date(18, 0, dayOffset: 1))
+        XCTAssertEqual(titles(on: date(12, 0), in: context), [])
+        XCTAssertEqual(titles(on: date(12, 0, dayOffset: 1), in: context), ["Gym"])
+        XCTAssertEqual(task.day, date(0, 0, dayOffset: 1), "stored on the start of the new day")
+
+        context.updateTask(task, title: "Gym", details: "", day: date(0, 0), time: nil)
+        XCTAssertEqual(titles(on: date(12, 0), in: context), ["Gym"])
+    }
+
+    @MainActor
+    func testWidgetRollsOverExactlyAtMidnight() throws {
+        let context = try makeContext()
+        context.insert(PlannerTask(title: "Today", day: date(0, 0)))
+        context.insert(PlannerTask(title: "Tomorrow", day: date(0, 0, dayOffset: 1)))
+
+        let lastMinute = date(23, 59)
+        let midnight = lastMinute.dayRange.upperBound
+        XCTAssertEqual(midnight, date(0, 0, dayOffset: 1))
+        XCTAssertEqual(titles(on: lastMinute, in: context), ["Today"])
+        XCTAssertEqual(titles(on: midnight, in: context), ["Tomorrow"])
+    }
+
+    /// A task made in another time zone isn't stored on this zone's midnight. The widget used to miss it.
+    @MainActor
+    func testWidgetMatchesTheAppForATaskFromAnotherTimeZone() throws {
+        let context = try makeContext()
+        let task = PlannerTask(title: "Flight", day: date(0, 0))
+        task.day = date(3, 0)
+        context.insert(task)
+
+        XCTAssertEqual(titles(on: date(12, 0), in: context), ["Flight"])
+        XCTAssertEqual(try context.fetch(PlannerTask.descriptor(for: date(12, 0))).map(\.title), ["Flight"])
+    }
+
+    // MARK: - Widget: changes reach the shared store right away
+
+    /// Two containers on one file, like the app and the widget. The widget's side is opened anew
+    /// for each read and autosave is off, so a change only shows if the action really saved it.
+    @MainActor
+    func testEveryActionIsOnDiskBeforeItReturns() throws {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".store")
+        let config = ModelConfiguration(url: url)
+        let container = try ModelContainer(for: PlannerTask.self, Series.self, configurations: config)
+        containers.append(container)
+        let app = container.mainContext
+        app.autosaveEnabled = false
+
+        func widget() throws -> [String] {
+            let other = try ModelContainer(for: PlannerTask.self, Series.self, configurations: config)
+            return withExtendedLifetime(other) { titles(on: date(12, 0), in: ModelContext(other)) }
+        }
+
+        let task = PlannerTask(title: "Gym", day: date(0, 0))
+        app.addTask(task)
+        XCTAssertEqual(try widget(), ["Gym"], "add")
+
+        app.updateTask(task, title: "Run", details: "", day: date(0, 0), time: nil)
+        XCTAssertEqual(try widget(), ["Run"], "edit title")
+
+        app.updateTask(task, title: "Run", details: "", day: date(0, 0, dayOffset: 1), time: nil)
+        XCTAssertEqual(try widget(), [], "moved to tomorrow")
+        app.updateTask(task, title: "Run", details: "", day: date(0, 0), time: nil)
+        XCTAssertEqual(try widget(), ["Run"], "moved back to today")
+
+        task.toggleDone()
+        XCTAssertEqual(try widget(), [], "completed")
+        task.toggleDone()
+        XCTAssertEqual(try widget(), ["Run"], "uncompleted")
+
+        app.makeRegular(task, .daily)
+        XCTAssertFalse(app.hasChanges, "make regular")
+        app.deleteSeries(of: task)
+        XCTAssertEqual(try widget(), [], "delete regular event")
+
+        let other = PlannerTask(title: "Read", day: date(0, 0))
+        app.addTask(other)
+        app.deleteTask(other)
+        XCTAssertEqual(try widget(), [], "delete")
+    }
+
+    /// What the widget's star does: a separate container writes, and the app reads the result.
+    @MainActor
+    func testCompletingFromTheWidgetReachesTheApp() throws {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".store")
+        let config = ModelConfiguration(url: url)
+        let container = try ModelContainer(for: PlannerTask.self, Series.self, configurations: config)
+        containers.append(container)
+        let app = container.mainContext
+        app.addTask(PlannerTask(title: "Gym", day: date(0, 0)))
+
+        let widgetContainer = try ModelContainer(for: PlannerTask.self, Series.self, configurations: config)
+        try withExtendedLifetime(widgetContainer) {
+            try ModelContext(widgetContainer).fetch(FetchDescriptor<PlannerTask>()).first?.toggleDone()
+        }
+
+        XCTAssertEqual(try app.fetch(FetchDescriptor<PlannerTask>()).map(\.isDone), [true])
+    }
+
+    // MARK: - Description limit
+
+    private func text(_ count: Int) -> String { String(repeating: "a", count: count) }
+
+    private let limit = PlannerTask.maxDetailsLength
+
+    func testDescriptionWithinLimitIsUntouched() {
+        XCTAssertEqual(PlannerTask.limitedDetails(text(200), previous: text(199), cap: limit), text(200))
+    }
+
+    func testTypingStopsAtLimitAndPasteIsTrimmed() {
+        XCTAssertEqual(PlannerTask.limitedDetails(text(201), previous: text(200), cap: limit), text(200))
+        XCTAssertEqual(PlannerTask.limitedDetails(text(500), previous: text(10), cap: limit), text(200))
+    }
+
+    /// Fast typing can deliver 201 and then 202 before the first trim lands. It must not get stuck over the limit.
+    func testFastTypingCannotGetStuckOverTheLimit() {
+        XCTAssertEqual(PlannerTask.limitedDetails(text(202), previous: text(201), cap: limit), text(200))
+    }
+
+    func testInsertingIntoAFullDescriptionKeepsItsEnd() {
+        let full = text(199) + "z"
+        XCTAssertEqual(PlannerTask.limitedDetails("b" + full, previous: full, cap: limit), full)
+    }
+
+    func testOldLongDescriptionCanOnlyShrink() {
+        var cap = PlannerTask.detailsCap(for: text(250))
+        XCTAssertEqual(cap, 250, "stored text stays as it is")
+        XCTAssertEqual(PlannerTask.limitedDetails(text(251), previous: text(250), cap: cap), text(250), "can't add")
+
+        // Deleting lowers the cap, so the room can't be used again.
+        XCTAssertEqual(PlannerTask.limitedDetails(text(240), previous: text(250), cap: cap), text(240))
+        cap = PlannerTask.detailsCap(for: text(240), current: cap)
+        XCTAssertEqual(PlannerTask.limitedDetails(text(241), previous: text(240), cap: cap), text(240))
+
+        // Under the limit it behaves like any other description.
+        cap = PlannerTask.detailsCap(for: text(190), current: cap)
+        XCTAssertEqual(cap, 200)
+        XCTAssertEqual(PlannerTask.limitedDetails(text(195), previous: text(190), cap: cap), text(195))
+    }
+
+    // MARK: - Daily task limit
+
+    /// Fills the day, leaving one of the tasks done, since done tasks count too.
+    @MainActor
+    private func fill(_ day: Date, in context: ModelContext) {
+        for i in 0..<PlannerTask.maxPerDay {
+            XCTAssertTrue(context.addTask(PlannerTask(title: "Task \(i)", day: day)))
+        }
+        try? context.fetch(PlannerTask.descriptor(for: day)).first?.toggleDone()
+    }
+
+    @MainActor
+    func testAddTaskRefusesThe21stTask() throws {
+        let context = try makeContext()
+        fill(date(0, 0), in: context)
+
+        XCTAssertFalse(context.addTask(PlannerTask(title: "One too many", day: date(0, 0))))
+        XCTAssertEqual(try context.fetchCount(PlannerTask.descriptor(for: date(0, 0))), PlannerTask.maxPerDay)
+        XCTAssertTrue(context.addTask(PlannerTask(title: "Tomorrow", day: date(0, 0, dayOffset: 1))), "other days aren't affected")
+    }
+
+    @MainActor
+    func testDeletingAndMovingAwayFreeAPlace() throws {
+        let context = try makeContext()
+        fill(date(0, 0), in: context)
+        let tasks = try context.fetch(PlannerTask.descriptor(for: date(0, 0)))
+
+        context.deleteTask(tasks[0])
+        XCTAssertTrue(context.hasRoom(on: date(0, 0)))
+        XCTAssertTrue(context.addTask(PlannerTask(title: "Back to 20", day: date(0, 0))))
+        XCTAssertFalse(context.hasRoom(on: date(0, 0)))
+
+        XCTAssertTrue(context.updateTask(tasks[1], title: "Moved", details: "", day: date(0, 0, dayOffset: 1), time: nil))
+        XCTAssertTrue(context.hasRoom(on: date(0, 0)))
+    }
+
+    @MainActor
+    func testMovingToAFullDayChangesNothing() throws {
+        let context = try makeContext()
+        fill(date(0, 0, dayOffset: 1), in: context)
+        let task = PlannerTask(title: "Gym", day: date(0, 0))
+        context.addTask(task)
+
+        XCTAssertFalse(context.updateTask(task, title: "Run", details: "", day: date(0, 0, dayOffset: 1), time: nil))
+        XCTAssertEqual(task.day, date(0, 0))
+        XCTAssertEqual(task.title, "Gym")
+    }
+
+    @MainActor
+    func testEditingATaskOnAFullDayStillWorks() throws {
+        let context = try makeContext()
+        fill(date(0, 0), in: context)
+        let task = try XCTUnwrap(context.fetch(PlannerTask.descriptor(for: date(0, 0))).first)
+
+        XCTAssertTrue(context.updateTask(task, title: "Renamed", details: "", day: date(0, 0), time: nil))
+        XCTAssertEqual(task.title, "Renamed")
+    }
+
+    /// Several regular events on a nearly full day: only the ones that fit get a copy.
+    @MainActor
+    func testTopUpStopsAtTheLimitAndFillsInLater() throws {
+        let context = try makeContext()
+        let now = date(8, 0)
+        let tomorrow = date(0, 0, dayOffset: 1)
+        for i in 0..<(PlannerTask.maxPerDay - 1) {
+            context.addTask(PlannerTask(title: "Task \(i)", day: tomorrow))
+        }
+        _ = makeRegular("Stretch", day: now, time: nil, .daily, in: context)
+        _ = makeRegular("Read", day: now, time: nil, .daily, in: context)
+        Series.topUp(in: context, now: now)
+        XCTAssertEqual(try context.fetchCount(PlannerTask.descriptor(for: tomorrow)), PlannerTask.maxPerDay)
+
+        // A place opens up: the skipped copy arrives with the next top-up.
+        let open = try XCTUnwrap(context.fetch(PlannerTask.descriptor(for: tomorrow)).first { $0.seriesID == nil })
+        context.deleteTask(open)
+        XCTAssertEqual(Series.topUp(in: context, now: now).count, 1)
+        XCTAssertEqual(try context.fetchCount(PlannerTask.descriptor(for: tomorrow)), PlannerTask.maxPerDay)
+    }
+
+    @MainActor
+    func testYearlyCopySkipsAFullYear() throws {
+        let context = try makeContext()
+        fill(day(2027, 10, 21), in: context)
+        let task = PlannerTask(title: "Anniversary", day: day(2026, 10, 21))
+        context.insert(task)
+        context.makeRegular(task, .yearly)
+
+        XCTAssertEqual(try context.fetchCount(PlannerTask.descriptor(for: day(2027, 10, 21))), PlannerTask.maxPerDay)
+        XCTAssertEqual(try yearlyCopies(of: task, in: context).map(\.day), [day(2026, 10, 21), day(2028, 10, 21), day(2029, 10, 21)])
     }
 
     private func day(_ year: Int, _ month: Int, _ day: Int) -> Date {
